@@ -1,128 +1,121 @@
-///<reference path="../node/node.d.ts"/>
-declare module Express{
-  export interface Request{
+import express = require("express");
 
-    params :{
-      all():Object;
-    }
+declare namespace Sails {
+	import Request = express.Request;
 
-  }
-  export interface Response{
-    view(route:string);
-  }
-  export interface Application{}
-}
+	export interface Application {}
 
-declare module Sails{
+	export interface Model {
+		attributes: Object;
 
-  export interface Model{
-    attributes:Object;
+		create(params: Object): WaterlinePromise<QueryResult>;
+		create(params: Array<Object>): WaterlinePromise<QueryResult>;
+		create(params: Object, cb: (err: Error, created: QueryResult)=>void): void;
+		create(params: Array<Object>, cb: (err: Error, created: Array<QueryResult>)=>void): void;
 
-    create(params:Object):WaterlinePromise<QueryResult>;
-    create(params:Array<Object>):WaterlinePromise<QueryResult>;
-    create(params:Object,cb:(err:Error,created:QueryResult)=>void):void;
-    create(params:Array<Object>,cb:(err:Error,created:Array<QueryResult>)=>void):void;
+		find(): QueryBuilder;
+		find(params: Object): QueryBuilder;
+		find(params: Object): WaterlinePromise<Array<QueryResult>>;
 
+		findOne(criteria: Object): WaterlinePromise<QueryResult>;
 
+		count(criteria: Object): WaterlinePromise<number>;
+		count(criteria: Array<Object>): WaterlinePromise<number>;
+		count(criteria: string): WaterlinePromise<number>;
+		count(criteria: number): WaterlinePromise<number>;
 
-    find():QueryBuilder;
-    find(params:Object):QueryBuilder;
-    find(params:Object):WaterlinePromise<Array<QueryResult>>;
+		count(criteria: Object, cb: (err: Error, found: number)=>void);
+		count(criteria: Array<Object>, cb: (err: Error, found: number)=>void);
+		count(criteria: string, cb: (err: Error, found: number)=>void);
+		count(criteria: number, cb: (err: Error, found: number)=>void);
 
-    findOne(criteria:Object):WaterlinePromise<QueryResult>;
+		destroy(criteria: Object): WaterlinePromise<Array<Record>>;
+		destroy(criteria: Array<Object>): WaterlinePromise<Array<Record>>;
+		destroy(criteria: string): WaterlinePromise<Array<Record>>;
+		destroy(criteria: number): WaterlinePromise<Array<Record>>;
 
+		destroy(criteria: Object, cb: (err: Error, deleted: Array<Record>)=>void): void;
+		destroy(criteria: Array<Object>, cb: (err: Error, deleted: Array<Record>)=>void): void;
+		destroy(criteria: string, cb: (err: Error, deleted: Array<Record>)=>void): void;
+		destroy(criteria: number, cb: (err: Error, deleted: Array<Record>)=>void): void;
 
+		update(criteria: Object, changes: Object): WaterlinePromise<Array<QueryResult>>;
+		update(criteria: Array<Object>, changes: Object): WaterlinePromise<Array<QueryResult>>;
+		update(criteria: string, changes: Object): WaterlinePromise<Array<QueryResult>>;
+		update(criteria: number, changes: Object): WaterlinePromise<Array<QueryResult>>;
 
+		update(criteria: Object, changes: Array<Object>): WaterlinePromise<Array<QueryResult>>;
+		update(criteria: Array<Object>, changes: Array<Object>): WaterlinePromise<Array<QueryResult>>;
+		update(criteria: string, changes: Array<Object>): WaterlinePromise<Array<QueryResult>>;
+		update(criteria: number, changes: Array<Object>): WaterlinePromise<Array<QueryResult>>;
 
-    count(criteria:Object):WaterlinePromise<number>;
-    count(criteria:Array<Object>):WaterlinePromise<number>;
-    count(criteria:string):WaterlinePromise<number>;
-    count(criteria:number):WaterlinePromise<number>;
+		update(criteria: Object, changes: Array<Object>, cb: (err: Error, updated: Array<QueryResult>)=>void): void;
+		update(criteria: Array<Object>, changes: Array<Object>, cb: (err: Error, updated: Array<QueryResult>)=>void): void;
+		update(criteria: string, changes: Array<Object>, cb: (err: Error, updated: Array<QueryResult>)=>void): void;
+		update(criteria: number, changes: Array<Object>, cb: (err: Error, updated: Array<QueryResult>)=>void): void;
 
-    count(criteria:Object,cb:(err:Error,found:number)=>void);
-    count(criteria:Array<Object>,cb:(err:Error,found:number)=>void);
-    count(criteria:string,cb:(err:Error,found:number)=>void);
-    count(criteria:number,cb:(err:Error,found:number)=>void);
+		query(sqlQuery: string, cb: (err: Error, results: Array<Record>)=>void);
+		native(cb: (err: Error, collection: Model)=>void);
 
-    destroy(criteria:Object):WaterlinePromise<Array<Record>>;
-    destroy(criteria:Array<Object>):WaterlinePromise<Array<Record>>;
-    destroy(criteria:string):WaterlinePromise<Array<Record>>;
-    destroy(criteria:number):WaterlinePromise<Array<Record>>;
+		stream(criteria: Object, writeEnd: Object): NodeJS.WritableStream;
+		stream(criteria: Array<Object>, writeEnd: Object): NodeJS.WritableStream;
+		stream(criteria: string, writeEnd: Object): NodeJS.WritableStream;
+		stream(criteria: number, writeEnd: Object): NodeJS.WritableStream;
 
-    destroy(criteria:Object,cb:(err:Error,deleted:Array<Record>)=>void):void;
-    destroy(criteria:Array<Object>,cb:(err:Error,deleted:Array<Record>)=>void):void;
-    destroy(criteria:string,cb:(err:Error,deleted:Array<Record>)=>void):void;
-    destroy(criteria:number,cb:(err:Error,deleted:Array<Record>)=>void):void;
+		stream(criteria: Object, writeEnd: Object): Error;
+		stream(criteria: Array<Object>, writeEnd: Object): Error;
+		stream(criteria: string, writeEnd: Object): Error;
+		stream(criteria: number, writeEnd: Object): Error;
 
+	}
 
+	export interface Req extends express.Request { }
 
-    update(criteria:Object,changes:Object):WaterlinePromise<Array<QueryResult>>;
-    update(criteria:Array<Object>,changes:Object):WaterlinePromise<Array<QueryResult>>;
-    update(criteria:string,changes:Object):WaterlinePromise<Array<QueryResult>>;
-    update(criteria:number,changes:Object):WaterlinePromise<Array<QueryResult>>;
+	export interface Res extends express.Response {
+		attachement(filename:string);
 
-    update(criteria:Object,changes:Array<Object>):WaterlinePromise<Array<QueryResult>>;
-    update(criteria:Array<Object>,changes:Array<Object>):WaterlinePromise<Array<QueryResult>>;
-    update(criteria:string,changes:Array<Object>):WaterlinePromise<Array<QueryResult>>;
-    update(criteria:number,changes:Array<Object>):WaterlinePromise<Array<QueryResult>>;
+		badRequest();
+		badRequest(data:any);
+		badRequest(data:any, pathToView:string);
 
-    update(criteria:Object,changes:Array<Object>,cb:(err:Error,updated:Array<QueryResult>)=>void):void;
-    update(criteria:Array<Object>,changes:Array<Object>,cb:(err:Error,updated:Array<QueryResult>)=>void):void;
-    update(criteria:string,changes:Array<Object>,cb:(err:Error,updated:Array<QueryResult>)=>void):void;
-    update(criteria:number,changes:Array<Object>,cb:(err:Error,updated:Array<QueryResult>)=>void):void;
+		serverError();
+		serverError(data:any);
+		serverError(data:any, pathToView:string);
 
+		view(route: string);
+	}
 
-    query(sqlQuery:string,cb:(err:Error,results:Array<Record>)=>void);
-    native(cb:(err:Error,collection:Model)=>void);
+	export class WaterlinePromise<T> extends Promise<T> {
+		exec(cb: (err: Error, results: Array<QueryResult>)=>void);
+		exec(cb: (err: Error, result: QueryResult)=>void);
+	}
 
-    stream(criteria:Object,writeEnd:Object):NodeJS.WritableStream;
-    stream(criteria:Array<Object>,writeEnd:Object):NodeJS.WritableStream;
-    stream(criteria:string,writeEnd:Object):NodeJS.WritableStream;
-    stream(criteria:number,writeEnd:Object):NodeJS.WritableStream;
+	export class Record {
+		id: number;
+		createdAt: Date;
+		updatedAt: Date;
+	}
 
-    stream(criteria:Object,writeEnd:Object):Error;
-    stream(criteria:Array<Object>,writeEnd:Object):Error;
-    stream(criteria:string,writeEnd:Object):Error;
-    stream(criteria:number,writeEnd:Object):Error;
+	export class QueryResult extends Record {
+		destroy(): Promise<Array<Sails.QueryResult>>;
 
-  }
+		toJSON(): Object;
+	}
 
+	export class QueryBuilder extends Promise<any> {
+		exec(cb: (error: any, results: Array<QueryResult>)=>void);
 
-  export class WaterlinePromise<T> extends Promise<T>{
-    exec(cb:(err:Error,results:Array<QueryResult>)=>void);
-    exec(cb:(err:Error,result:QueryResult)=>void);
-  }
+		where(condition: Object): QueryBuilder;
 
+		limit(lim: number): QueryBuilder;
 
+		skip(num: number): QueryBuilder;
 
+		sort(criteria: string): QueryBuilder;
 
-  export class Record{
-    id:number;
-    createdAt:Date;
-    updatedAt:Date;
-  }
-  export class QueryResult extends Record{
-    destroy():Promise<Array<Sails.QueryResult>>;
-    toJSON():Object;
-  }
+		populate(association: string): QueryBuilder;
+		populate(association: string, filter: Object): QueryBuilder;
+	}
 
-
-
-
-  export class QueryBuilder extends Promise<any>{
-    exec(cb:(error:any,results:Array<QueryResult>)=>void);
-
-    where(condition:Object):QueryBuilder;
-    limit(lim:number):QueryBuilder;
-    skip(num:number):QueryBuilder;
-    sort(criteria:string):QueryBuilder;
-    populate(association:string):QueryBuilder;
-    populate(association:string,filter:Object):QueryBuilder;
-  }
-
-
-  export interface Controller{
-
-  }
-
+	export interface Controller {}
 }
